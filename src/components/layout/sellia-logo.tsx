@@ -12,8 +12,8 @@ export default function Logo() {
         <Image
           src="/logo.png"
           alt="Sellia Logo"
-          width={128}
-          height={40}
+          width={150}
+          height={150}
           className="h-10 w-auto"
         />
         <p>sellia</p>
