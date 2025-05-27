@@ -12,9 +12,11 @@ export default function Logo() {
         <Image
           src="/logo.png"
           alt="Sellia Logo"
-          width={150}
-          height={150}
-          className="h-10 w-auto"
+          height={50}
+          width={50}
+          className="h-10 w-10 flex-shrink-0"
+          loading="eager"
+          priority
         />
         <p>sellia</p>
       </div>
