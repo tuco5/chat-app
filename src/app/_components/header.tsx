@@ -1,6 +1,6 @@
-import GithubLogo from "@/components/github-logo";
-import SelliaLogo from "@/components/sellia-logo";
-import ThemeToggle from "@/components/theme-toggle";
+import GithubLogo from "@/components/layout/github-logo";
+import SelliaLogo from "@/components/layout/sellia-logo";
+import ThemeToggle from "@/components/layout/theme-toggle";
 
 export default function Header() {
   return (
