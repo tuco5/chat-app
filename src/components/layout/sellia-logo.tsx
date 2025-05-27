@@ -11,7 +11,7 @@ export default function Logo() {
       <div className="flex gap-1 items-baseline italic font-bold text-3xl">
         <Image
           src="/logo.png"
-          alt="Logo"
+          alt="Sellia Logo"
           width={128}
           height={40}
           className="h-10 w-auto"
