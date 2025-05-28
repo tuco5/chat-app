@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import {
   Sidebar,
@@ -13,23 +14,26 @@ import {
 } from "@/components/ui/sidebar";
 import { Home, MessageSquare } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
     title: "Conversations",
-    url: "#",
+    url: "/conversations",
     icon: MessageSquare,
   },
 ];
 
 export default function AppSidebar() {
+  const path = usePathname();
+
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -44,7 +48,7 @@ export default function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild isActive={path === item.url}>
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -63,13 +67,16 @@ export default function AppSidebar() {
 
 function Logo() {
   return (
-    <Link href="/" className="flex gap-1 items-baseline cursor-pointer">
+    <Link
+      href="/"
+      className="pl-1 flex gap-2 items-baseline cursor-pointer overflow-hidden"
+    >
       <Image
         src="/logo.png"
         alt="Sellia Logo"
         height={24}
         width={24}
-        className="h-6 w-6 flex-shrink-0"
+        className="h-6 w-6 flex-shrink-0 self-center"
         loading="eager"
         priority
       />
