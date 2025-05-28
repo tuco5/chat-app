@@ -17,7 +17,7 @@ export default function Home() {
           asChild
           className="text-lg py-6 px-10 bg-blue-600 text-white hover:bg-blue-500 transition-colors duration-300"
         >
-          <Link href="/conversations">Get Started 🚀</Link>
+          <Link href="/chats">Get Started 🚀</Link>
         </Button>
       </section>
     </div>

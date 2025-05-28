@@ -23,8 +23,8 @@ const items = [
     icon: Home,
   },
   {
-    title: "Conversations",
-    url: "/conversations",
+    title: "Chats",
+    url: "/chats",
     icon: MessageSquare,
   },
 ];

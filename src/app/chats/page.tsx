@@ -7,22 +7,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { avatarFallback } from "@/utils/avatar-fallback";
 import { MessageCircle } from "lucide-react";
 
-export default function ConversationsPage() {
+export default function ChatsPage() {
   const { data: clients, isLoading } = useQuery({
-    queryKey: ["conversations"],
+    queryKey: ["chats"],
     queryFn: getClients,
   });
 
   return (
     <div className="flex flex-col items-center p-4">
-      <h1 className="text-3xl font-bold mb-4">Conversations</h1>
+      <h1 className="text-3xl font-bold mb-4">Chats </h1>
 
       <div className="flex flex-col items-center gap-4 w-full max-w-lg">
         <MoonLoader color="dodgerblue" size={40} loading={isLoading} />
         {clients?.map((client) => (
           <Link
             key={client._id}
-            href={`/conversations/${client._id}`}
+            href={`/chats/${client._id}`}
             className="flex items-center p-4 gap-4 border rounded-lg shadow hover:shadow-lg transition-shadow w-full"
           >
             <Avatar className="w-12 h-12">
