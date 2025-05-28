@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <Providers>
           <Header />
-          {children}
+          <main className="min-h-[85vh]">{children}</main>
           <Footer />
         </Providers>
       </body>
