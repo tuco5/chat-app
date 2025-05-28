@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -12,8 +13,11 @@ export default function Home() {
           A blazing-fast chat app built with Next.js and Socket.io — experience
           real-time messaging like never before.
         </p>
-        <Button className="text-lg py-6 px-10 bg-blue-600 text-white hover:bg-blue-500 transition-colors duration-300">
-          Get Started 🚀
+        <Button
+          asChild
+          className="text-lg py-6 px-10 bg-blue-600 text-white hover:bg-blue-500 transition-colors duration-300"
+        >
+          <Link href="/chats">Get Started 🚀</Link>
         </Button>
       </section>
     </div>
