@@ -42,7 +42,6 @@ export default function ChatForm({
 
     if (error) console.error(error);
 
-    // Clear form after submission
     form.reset({
       text: "",
       client_id: clientId,
