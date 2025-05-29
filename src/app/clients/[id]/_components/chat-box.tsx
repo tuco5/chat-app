@@ -1,8 +1,9 @@
 "use client";
+
+import { useCallback } from "react";
+import { Check, CheckCheck, Clock } from "lucide-react";
 import { Message } from "@/api/messages";
 import { cn } from "@/utils/cn";
-import { Check, CheckCheck, Clock } from "lucide-react";
-import { useCallback } from "react";
 
 const fakeMessages: Message[] = [
   {
@@ -37,7 +38,7 @@ const fakeMessages: Message[] = [
   },
 ];
 
-export default function ChatBox({ id }: { id: string }) {
+export default function ChatBox() {
   return (
     <div className="w-full border border-accent rounded-xl h-full p-4 shadow-lg bg-white dark:bg-background">
       <div className="flex flex-col gap-2 w-full h-full overflow-y-auto">
@@ -97,9 +98,7 @@ function MessageBubble({ message }: { message: Message }) {
           bubbleAlignment
         )}
       >
-        <p className="text-sm">
-          {message.text}, {message.text}, {message.text}
-        </p>
+        <p className="text-sm">{message.text}</p>
         <div className="flex gap-1">
           <span className="text-xs">
             {new Date(
