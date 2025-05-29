@@ -22,7 +22,7 @@ export default function ChatsPage() {
         {clients?.map((client) => (
           <Link
             key={client._id}
-            href={`/chats/${client._id}`}
+            href={`/clients/${client._id}`}
             className="flex items-center p-4 gap-4 border rounded-lg shadow hover:shadow-lg transition-shadow w-full"
           >
             <Avatar className="w-12 h-12">

@@ -17,7 +17,7 @@ export default function Home() {
           asChild
           className="text-lg py-6 px-10 bg-blue-600 text-white hover:bg-blue-500 "
         >
-          <Link href="/chats">Start as Agent 🚀</Link>
+          <Link href="/clients">Start as Agent 🚀</Link>
         </Button>
 
         <div className="flex items-center gap-2 w-full text-muted-foreground">
@@ -28,11 +28,11 @@ export default function Home() {
 
         <div className="flex items-center gap-4">
           <Button asChild variant="outline" className="text-lg py-6 px-10 ">
-            <Link href="/chats">Pedro 😎</Link>
+            <Link href="/chat/629a8125b2d313190810212f">Pedro 😎</Link>
           </Button>
           <span className="text-muted-foreground">or</span>
           <Button asChild variant="secondary" className="text-lg py-6 px-10">
-            <Link href="/chats">Diego 🙂</Link>
+            <Link href="/chat/629e39e8b2d31319081e0650">Diego 🙂</Link>
           </Button>
         </div>
       </section>
