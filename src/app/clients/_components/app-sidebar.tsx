@@ -24,7 +24,7 @@ const items = [
   },
   {
     title: "Chats",
-    url: "/chats",
+    url: "/clients",
     icon: MessageSquare,
   },
 ];
