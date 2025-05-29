@@ -1,6 +1,6 @@
 import { getClientById } from "@/api/clients";
-import ChatBox from "./_components/chat-box";
-import ChatForm from "./_components/chat-form";
+import ChatBox from "@/components/chat/chat-box";
+import ChatForm from "@/components/chat/chat-form";
 import { supabase } from "@/lib/supabase";
 
 export default async function ClientPage({
