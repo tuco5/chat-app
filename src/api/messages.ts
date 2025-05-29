@@ -6,5 +6,5 @@ export type Message = {
   updatedAt: string;
   deliveredAt: string | null;
   readAt: string | null;
-  typeUser: "User" | "Client" | "UserSystem";
+  sender: "User" | "Client" | "UserSystem";
 };

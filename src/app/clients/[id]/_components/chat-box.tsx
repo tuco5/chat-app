@@ -14,7 +14,7 @@ const fakeMessages: Message[] = [
     updatedAt: "2023-06-01T10:00:00.000Z",
     deliveredAt: "2023-06-01T10:00:00.000Z",
     readAt: "2023-06-01T10:00:00.000Z",
-    typeUser: "User",
+    sender: "User",
   },
   {
     _id: "2",
@@ -24,7 +24,7 @@ const fakeMessages: Message[] = [
     updatedAt: "2023-06-01T10:01:00.000Z",
     deliveredAt: "2023-06-01T10:01:00.000Z",
     readAt: "2023-06-01T10:01:00.000Z",
-    typeUser: "Client",
+    sender: "Client",
   },
   {
     _id: "3",
@@ -34,7 +34,7 @@ const fakeMessages: Message[] = [
     updatedAt: "2023-06-01T10:02:00.000Z",
     deliveredAt: null,
     readAt: null,
-    typeUser: "User",
+    sender: "User",
   },
 ];
 
@@ -54,7 +54,7 @@ export default function ChatBox() {
 }
 
 function MessageBubble({ message }: { message: Message }) {
-  const isClient = message.typeUser === "Client";
+  const isClient = message.sender === "Client";
 
   const bubbleSide = isClient
     ? "justify-start"
