@@ -10,8 +10,8 @@ export default function Home() {
           Chat Seamlessly.
         </h1>
         <p className="text-lg px-4">
-          A blazing-fast chat app built with Next.js — experience real-time
-          messaging like never before.
+          A blazing-fast chat app built with Next.js —
+          experience real-time messaging like never before.
         </p>
         <Button
           asChild
@@ -27,12 +27,24 @@ export default function Home() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Button asChild variant="outline" className="text-lg py-6 px-10 ">
-            <Link href="/chat/629a8125b2d313190810212f">Pedro 😎</Link>
+          <Button
+            asChild
+            variant="outline"
+            className="text-lg py-6 px-10 bg-gray-300/20"
+          >
+            <Link href="/chat/629a8125b2d313190810212f">
+              Pedro 😎
+            </Link>
           </Button>
           <span className="text-muted-foreground">or</span>
-          <Button asChild variant="secondary" className="text-lg py-6 px-10">
-            <Link href="/chat/629e39e8b2d31319081e0650">Diego 🙂</Link>
+          <Button
+            asChild
+            variant="secondary"
+            className="text-lg py-6 px-10 bg-gray-300/20"
+          >
+            <Link href="/chat/629e39e8b2d31319081e0650">
+              Diego 🙂
+            </Link>
           </Button>
         </div>
       </section>
