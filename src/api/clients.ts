@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-type Client = {
+export type Client = {
   _id: string;
   name: string;
   createdAt: string;
@@ -26,11 +26,15 @@ export function getClientById(id: string): Promise<Client> {
       "Content-Type": "application/json",
     },
   }).then((response) =>
-    (response.json() as Promise<Client[]>).then((clients) => {
-      const client = clients.find((client) => client._id === id);
-      if (!client) notFound();
+    (response.json() as Promise<Client[]>).then(
+      (clients) => {
+        const client = clients.find(
+          (client) => client._id === id
+        );
+        if (!client) notFound();
 
-      return client;
-    })
+        return client;
+      }
+    )
   );
 }
