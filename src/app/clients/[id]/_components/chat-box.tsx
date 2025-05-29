@@ -1,18 +1,56 @@
 "use client";
 
-import { useCallback } from "react";
-import { Check, CheckCheck, Clock } from "lucide-react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  ArrowBigDownDash,
+  Check,
+  CheckCheck,
+  Clock,
+} from "lucide-react";
 import { Message } from "@/api/messages";
 import { cn } from "@/utils/cn";
+import { formatDate } from "@/utils/dates";
+import { Button } from "@/components/ui/button";
 
 export default function ChatBox({
   messages,
 }: {
   messages: Message[];
 }) {
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, []);
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  const handleScroll = (
+    e: React.UIEvent<HTMLDivElement>
+  ) => {
+    const { scrollTop, scrollHeight, clientHeight } =
+      e.currentTarget;
+    setIsAtBottom(
+      scrollTop + clientHeight >= scrollHeight - 50
+    );
+  };
+
   return (
-    <div className="w-full border border-accent rounded-xl h-[70vh] shadow-lg bg-white dark:bg-background ">
-      <div className="flex flex-col gap-2 w-full h-full overflow-y-auto p-4">
+    <div className="w-full relative border border-accent rounded-xl h-[70vh] shadow-lg bg-white dark:bg-background">
+      <div
+        onScroll={handleScroll}
+        className="flex flex-col gap-2 w-full h-full overflow-y-auto p-4"
+      >
         {messages.map((message, index) => {
           const currentDate = formatDate(
             message.created_at
@@ -35,10 +73,20 @@ export default function ChatBox({
             </div>
           );
         })}
+        <div ref={bottomRef} />
       </div>
+      {!isAtBottom && (
+        <Button
+          onClick={scrollToBottom}
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 p-2 rounded-full bg-blue-600/50 text-white shadow-md hover:bg-blue-600 transition"
+        >
+          <ArrowBigDownDash />
+        </Button>
+      )}
     </div>
   );
 }
+
 function DateSeparator({
   curr,
   prev,
@@ -86,7 +134,6 @@ function MessageBubble({ message }: { message: Message }) {
     const size = "w-4 h-4";
 
     if (message.read_at) {
-      console.log("Message read at:", message.read_at);
       return (
         <CheckCheck
           className={cn("text-green-500", size)}
@@ -124,14 +171,4 @@ function MessageBubble({ message }: { message: Message }) {
       </div>
     </div>
   );
-}
-
-function formatDate(dateString: string) {
-  const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
 }
