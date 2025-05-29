@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import { SelliaLogo } from "@/components/layout/sellia-logo";
 import {
   Sidebar,
   SidebarContent,
@@ -37,18 +37,23 @@ export default function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <Logo />
+            <SelliaLogo />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Code Challenge</SidebarGroupLabel>
+          <SidebarGroupLabel>
+            Code Challenge
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={path === item.url}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={path === item.url}
+                  >
                     <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
@@ -62,25 +67,5 @@ export default function AppSidebar() {
       </SidebarContent>
       <SidebarFooter />
     </Sidebar>
-  );
-}
-
-function Logo() {
-  return (
-    <Link
-      href="/"
-      className="pl-1 flex gap-2 items-baseline cursor-pointer overflow-hidden"
-    >
-      <Image
-        src="/logo.png"
-        alt="Sellia Logo"
-        height={24}
-        width={24}
-        className="h-6 w-6 flex-shrink-0 self-center"
-        loading="eager"
-        priority
-      />
-      <p className=" italic font-bold text-xl">sellia</p>
-    </Link>
   );
 }
