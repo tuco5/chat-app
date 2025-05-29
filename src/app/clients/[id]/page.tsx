@@ -1,6 +1,7 @@
 import { getClientById } from "@/api/clients";
 import ChatBox from "./_components/chat-box";
 import ChatForm from "./_components/chat-form";
+import { supabase } from "@/lib/supabase";
 
 export default async function ClientPage({
   params,
@@ -10,7 +11,11 @@ export default async function ClientPage({
   const { id } = await params;
   const client = await getClientById(id);
 
-  // TODO: fetch message history for the client
+  const { data } = await supabase
+    .from("messages")
+    .select("*")
+    .eq("client_id", id)
+    .order("created_at", { ascending: true });
 
   return (
     <main className="p-4 h-[94.5vh] flex flex-col items-center bg-linear-to-br from-white to-blue-100 dark:from-gray-950 dark:to-gray-900">
@@ -18,7 +23,7 @@ export default async function ClientPage({
         <h1 className="w-full text-3xl font-bold">
           {client.name}
         </h1>
-        <ChatBox />
+        <ChatBox messages={data ?? []} />
         <ChatForm clientId={id} />
       </div>
     </main>
