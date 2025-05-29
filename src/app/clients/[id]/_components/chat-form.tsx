@@ -11,10 +11,12 @@ import {
   FormField,
   FormItem,
 } from "@/components/ui/form";
+import { supabase } from "@/lib/supabase";
 
 const formSchema = z.object({
   text: z.string().min(1, "Message cannot be empty"),
-  clientId: z.string().min(1, "Client ID is required"),
+  sender: z.enum(["User", "Client", "UserSystem"]),
+  client_id: z.string().min(1, "Client ID is required"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -28,19 +30,23 @@ export default function ChatForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       text: "",
-      clientId: clientId,
+      sender: "User",
+      client_id: clientId,
     },
   });
 
-  function onSubmit(values: FormValues) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: FormValues) {
+    const { error } = await supabase
+      .from("messages")
+      .insert([values]);
+
+    if (error) console.error(error);
 
     // Clear form after submission
     form.reset({
       text: "",
-      clientId: clientId,
+      client_id: clientId,
+      sender: "User",
     });
   }
 
@@ -67,20 +73,16 @@ export default function ChatForm({
             </FormItem>
           )}
         />
-
         <input
           type="hidden"
-          name="clientId"
+          name="client_id"
           value={clientId}
         />
+        <input type="hidden" name="sender" value="User" />
         <Button
           className="bg-blue-600 text-white text-lg hover:bg-blue-500 h-12 shadow-lg"
           size="lg"
           type="submit"
-          disabled={
-            !form.formState.isValid ||
-            form.formState.isSubmitting
-          }
         >
           Send
         </Button>
