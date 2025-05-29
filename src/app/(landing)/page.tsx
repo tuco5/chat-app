@@ -15,7 +15,7 @@ export default function Home() {
         </p>
         <Button
           asChild
-          className="text-lg py-6 px-10 bg-blue-600 text-white hover:bg-blue-500 "
+          className="text-lg py-6 px-10 bg-blue-600 text-white hover:bg-blue-500"
         >
           <Link href="/clients">Start as Agent 🚀</Link>
         </Button>
