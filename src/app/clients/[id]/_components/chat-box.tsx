@@ -5,50 +5,64 @@ import { Check, CheckCheck, Clock } from "lucide-react";
 import { Message } from "@/api/messages";
 import { cn } from "@/utils/cn";
 
-const fakeMessages: Message[] = [
-  {
-    _id: "1",
-    clientId: "1",
-    text: "Hello, how can I help you today?",
-    createdAt: "2023-06-01T10:00:00.000Z",
-    updatedAt: "2023-06-01T10:00:00.000Z",
-    deliveredAt: "2023-06-01T10:00:00.000Z",
-    readAt: "2023-06-01T10:00:00.000Z",
-    sender: "User",
-  },
-  {
-    _id: "2",
-    clientId: "1",
-    text: "I have a question about my order.",
-    createdAt: "2023-06-01T10:01:00.000Z",
-    updatedAt: "2023-06-01T10:01:00.000Z",
-    deliveredAt: "2023-06-01T10:01:00.000Z",
-    readAt: "2023-06-01T10:01:00.000Z",
-    sender: "Client",
-  },
-  {
-    _id: "3",
-    clientId: "1",
-    text: "Sure, I can help with that.",
-    createdAt: "2023-06-01T10:02:00.000Z",
-    updatedAt: "2023-06-01T10:02:00.000Z",
-    deliveredAt: null,
-    readAt: null,
-    sender: "User",
-  },
-];
-
-export default function ChatBox() {
+export default function ChatBox({
+  messages,
+}: {
+  messages: Message[];
+}) {
   return (
-    <div className="w-full border border-accent rounded-xl h-full p-4 shadow-lg bg-white dark:bg-background">
-      <div className="flex flex-col gap-2 w-full h-full overflow-y-auto">
-        {fakeMessages.map((message) => (
-          <MessageBubble
-            key={message._id}
-            message={message}
-          />
-        ))}
+    <div className="w-full border border-accent rounded-xl h-[70vh] shadow-lg bg-white dark:bg-background ">
+      <div className="flex flex-col gap-2 w-full h-full overflow-y-auto p-4">
+        {messages.map((message, index) => {
+          const currentDate = formatDate(
+            message.created_at
+          );
+          const prevDate =
+            index > 0
+              ? formatDate(messages[index - 1].created_at)
+              : null;
+
+          return (
+            <div key={message.id}>
+              <DateSeparator
+                curr={currentDate}
+                prev={prevDate ?? ""}
+              />
+              <MessageBubble
+                key={message.id}
+                message={message}
+              />
+            </div>
+          );
+        })}
       </div>
+    </div>
+  );
+}
+function DateSeparator({
+  curr,
+  prev,
+}: {
+  curr: string;
+  prev: string;
+}) {
+  const SeparatorLines = useCallback(
+    () => (
+      <hr className="flex-grow max-w-24 border-t border-gray-300 dark:border-gray-700" />
+    ),
+    []
+  );
+
+  const showDateSeparator = curr !== prev;
+  if (!showDateSeparator) return null;
+
+  return (
+    <div className="flex items-center justify-center mb-4">
+      <SeparatorLines />
+      <span className="mx-4 text-xs text-muted-foreground p-1.5 rounded-sm bg-sidebar">
+        🗓️ {curr}
+      </span>
+      <SeparatorLines />
     </div>
   );
 }
@@ -71,21 +85,21 @@ function MessageBubble({ message }: { message: Message }) {
 
     const size = "w-4 h-4";
 
-    if (message.readAt) {
-      console.log("Message read at:", message.readAt);
+    if (message.read_at) {
+      console.log("Message read at:", message.read_at);
       return (
         <CheckCheck
           className={cn("text-green-500", size)}
         />
       );
     }
-    if (message.deliveredAt) {
+    if (message.delivered_at) {
       return (
         <Check className={cn("text-green-500", size)} />
       );
     }
     return <Clock className={size} />;
-  }, [isClient, message.deliveredAt, message.readAt]);
+  }, [isClient, message.delivered_at, message.read_at]);
 
   return (
     <div
@@ -102,7 +116,7 @@ function MessageBubble({ message }: { message: Message }) {
         <div className="flex gap-1">
           <span className="text-xs">
             {new Date(
-              message.createdAt
+              message.created_at
             ).toLocaleTimeString()}
           </span>
           <MessageStatusIcon />
@@ -110,4 +124,14 @@ function MessageBubble({ message }: { message: Message }) {
       </div>
     </div>
   );
+}
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
 }
