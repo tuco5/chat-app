@@ -23,7 +23,7 @@ export default async function ClientPage({
         <h1 className="w-full text-3xl font-bold">
           {client.name}
         </h1>
-        <ChatBox messages={data ?? []} />
+        <ChatBox serverData={data ?? []} />
         <ChatForm clientId={id} />
       </div>
     </main>

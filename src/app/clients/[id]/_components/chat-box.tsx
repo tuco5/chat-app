@@ -16,14 +16,43 @@ import { Message } from "@/api/messages";
 import { cn } from "@/utils/cn";
 import { formatDate } from "@/utils/dates";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
 
 export default function ChatBox({
-  messages,
+  serverData,
 }: {
-  messages: Message[];
+  serverData: Message[];
 }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const [messages, setMessages] =
+    useState<Message[]>(serverData);
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("chat")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+        },
+        (payload) => {
+          setMessages((messages) => [
+            ...messages,
+            payload.new as Message,
+          ]);
+          scrollToBottom();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [messages, setMessages]);
 
   useEffect(() => {
     scrollToBottom();
