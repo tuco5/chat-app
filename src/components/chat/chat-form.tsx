@@ -23,8 +23,10 @@ type FormValues = z.infer<typeof formSchema>;
 
 export default function ChatForm({
   clientId,
+  whoseId,
 }: {
   clientId: string;
+  whoseId: "Client" | "User";
 }) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -36,6 +38,7 @@ export default function ChatForm({
   });
 
   async function onSubmit(values: FormValues) {
+    console.log("Form submitted:", values);
     const { error } = await supabase
       .from("messages")
       .insert([values]);
@@ -45,7 +48,7 @@ export default function ChatForm({
     form.reset({
       text: "",
       client_id: clientId,
-      sender: "User",
+      sender: whoseId,
     });
   }
 
@@ -77,7 +80,11 @@ export default function ChatForm({
           name="client_id"
           value={clientId}
         />
-        <input type="hidden" name="sender" value="User" />
+        <input
+          type="hidden"
+          name="sender"
+          value={whoseId}
+        />
         <Button
           className="bg-blue-600 text-white text-lg hover:bg-blue-500 h-12 shadow-lg"
           size="lg"

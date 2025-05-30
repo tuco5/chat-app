@@ -20,8 +20,10 @@ import { supabase } from "@/lib/supabase";
 
 export default function ChatBox({
   serverData,
+  whoseId = "Client",
 }: {
   serverData: Message[];
+  whoseId?: "Client" | "User";
 }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [messages, setMessages] =
@@ -40,11 +42,11 @@ export default function ChatBox({
           table: "messages",
         },
         (payload) => {
+          console.log("New message received:", payload);
           setMessages((messages) => [
             ...messages,
             payload.new as Message,
           ]);
-          scrollToBottom();
         }
       )
       .subscribe();
@@ -56,11 +58,13 @@ export default function ChatBox({
 
   useEffect(() => {
     scrollToBottom();
-  }, []);
+  }, [messages.length]);
 
-  const scrollToBottom = () => {
+  const scrollToBottom = (
+    behavior: ScrollBehavior = "instant"
+  ) => {
     bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
+      behavior,
     });
   };
 
@@ -75,7 +79,7 @@ export default function ChatBox({
   };
 
   return (
-    <div className="w-full relative border border-accent rounded-xl h-[70vh] shadow-lg bg-white dark:bg-background">
+    <div className="w-full relative border border-accent rounded-xl h-[70vh] shadow-lg bg-white dark:bg-background overflow-hidden">
       <div
         onScroll={handleScroll}
         className="flex flex-col gap-2 w-full h-full overflow-y-auto p-4"
@@ -98,6 +102,7 @@ export default function ChatBox({
               <MessageBubble
                 key={message.id}
                 message={message}
+                whoseId={whoseId}
               />
             </div>
           );
@@ -106,7 +111,7 @@ export default function ChatBox({
       </div>
       {!isAtBottom && (
         <Button
-          onClick={scrollToBottom}
+          onClick={() => scrollToBottom("smooth")}
           className="absolute bottom-4 left-1/2 transform -translate-x-1/2 p-2 rounded-full bg-blue-600/50 text-white shadow-md hover:bg-blue-600 transition"
         >
           <ArrowBigDownDash />
@@ -144,21 +149,25 @@ function DateSeparator({
   );
 }
 
-function MessageBubble({ message }: { message: Message }) {
-  const isClient = message.sender === "Client";
+function MessageBubble({
+  message,
+  whoseId,
+}: {
+  message: Message;
+  whoseId: "Client" | "User";
+}) {
+  const isMe = message.sender.includes(whoseId);
 
-  const bubbleSide = isClient
-    ? "justify-start"
-    : "justify-end";
-  const bubbleColor = isClient
-    ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-    : "bg-blue-600 text-white";
-  const bubbleAlignment = isClient
-    ? "items-start"
-    : "items-end";
+  const bubbleSide = isMe ? "justify-end" : "justify-start";
+  const bubbleColor = isMe
+    ? "bg-blue-600 text-white"
+    : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100";
+  const bubbleAlignment = isMe
+    ? "items-end"
+    : "items-start";
 
   const MessageStatusIcon = useCallback(() => {
-    if (isClient) return null;
+    if (!isMe) return null;
 
     const size = "w-4 h-4";
 
@@ -175,7 +184,7 @@ function MessageBubble({ message }: { message: Message }) {
       );
     }
     return <Clock className={size} />;
-  }, [isClient, message.delivered_at, message.read_at]);
+  }, [isMe, message.delivered_at, message.read_at]);
 
   return (
     <div
