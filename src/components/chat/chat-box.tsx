@@ -237,7 +237,11 @@ function MessageBubble({
           <span className="text-xs">
             {new Date(
               message.created_at
-            ).toLocaleTimeString()}
+            ).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })}
           </span>
           <MessageStatusIcon />
         </div>
