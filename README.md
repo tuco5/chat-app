@@ -30,7 +30,18 @@ cd seelia-chat-app
 npm install
 ```
 
-### 3. Run the development server
+### 3. Set Environment Variables
+
+Change the name of the file `example.env` --> `.env` and set these variables:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+These are shared over email with the recruiter, ask for them or contact me to tudor.comparan@gmail.com
+
+### 4. Run the development server
 
 ```bash
 npm run dev
