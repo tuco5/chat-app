@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="flex justify-center items-center h-25 border-t border-muted bg-sidebar mt-auto">
+    <footer className="flex justify-center items-center h-25 border-t border-muted bg-sidebar/60 mt-auto">
       <div className="flex items-center justify-between p-2 w-full max-w-6xl">
         &copy; 2025 Sellia. All rights reserved.
       </div>

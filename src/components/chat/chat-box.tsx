@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import {
-  ArrowBigDownDash,
+  ArrowDownToLine,
   Check,
   CheckCheck,
   Clock,
@@ -20,8 +20,10 @@ import { supabase } from "@/lib/supabase";
 
 export default function ChatBox({
   serverData,
+  whoseId,
 }: {
   serverData: Message[];
+  whoseId: "Client" | "User";
 }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [messages, setMessages] =
@@ -30,6 +32,22 @@ export default function ChatBox({
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const markMessageAsDelivered = async (
+      payload: Message
+    ) => {
+      if (payload.sender === whoseId) return;
+
+      const delivered_at = new Date().toISOString();
+      const { error } = await supabase
+        .from("messages")
+        .update({
+          delivered_at,
+        })
+        .eq("id", payload.id);
+
+      if (error) console.error(error);
+    };
+
     const channel = supabase
       .channel("chat")
       .on(
@@ -44,7 +62,24 @@ export default function ChatBox({
             ...messages,
             payload.new as Message,
           ]);
-          scrollToBottom();
+          markMessageAsDelivered(payload.new as Message);
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "messages",
+        },
+        (payload) => {
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === payload.new.id
+                ? (payload.new as Message)
+                : msg
+            )
+          );
         }
       )
       .subscribe();
@@ -52,15 +87,19 @@ export default function ChatBox({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [messages, setMessages]);
+  }, [messages, setMessages, whoseId]);
 
   useEffect(() => {
     scrollToBottom();
-  }, []);
+  }, [messages.length]);
 
-  const scrollToBottom = () => {
+  useEffect(() => {}, [messages]);
+
+  const scrollToBottom = (
+    behavior: ScrollBehavior = "instant"
+  ) => {
     bottomRef.current?.scrollIntoView({
-      behavior: "smooth",
+      behavior,
     });
   };
 
@@ -75,7 +114,7 @@ export default function ChatBox({
   };
 
   return (
-    <div className="w-full relative border border-accent rounded-xl h-[70vh] shadow-lg bg-white dark:bg-background">
+    <div className="w-full relative border border-accent rounded-xl h-[70vh] shadow-lg bg-white dark:bg-background overflow-hidden">
       <div
         onScroll={handleScroll}
         className="flex flex-col gap-2 w-full h-full overflow-y-auto p-4"
@@ -98,6 +137,7 @@ export default function ChatBox({
               <MessageBubble
                 key={message.id}
                 message={message}
+                whoseId={whoseId}
               />
             </div>
           );
@@ -106,10 +146,10 @@ export default function ChatBox({
       </div>
       {!isAtBottom && (
         <Button
-          onClick={scrollToBottom}
+          onClick={() => scrollToBottom("smooth")}
           className="absolute bottom-4 left-1/2 transform -translate-x-1/2 p-2 rounded-full bg-blue-600/50 text-white shadow-md hover:bg-blue-600 transition"
         >
-          <ArrowBigDownDash />
+          <ArrowDownToLine />
         </Button>
       )}
     </div>
@@ -144,21 +184,25 @@ function DateSeparator({
   );
 }
 
-function MessageBubble({ message }: { message: Message }) {
-  const isClient = message.sender === "Client";
+function MessageBubble({
+  message,
+  whoseId,
+}: {
+  message: Message;
+  whoseId: "Client" | "User";
+}) {
+  const isMe = message.sender.includes(whoseId);
 
-  const bubbleSide = isClient
-    ? "justify-start"
-    : "justify-end";
-  const bubbleColor = isClient
-    ? "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-    : "bg-blue-600 text-white";
-  const bubbleAlignment = isClient
-    ? "items-start"
-    : "items-end";
+  const bubbleSide = isMe ? "justify-end" : "justify-start";
+  const bubbleColor = isMe
+    ? "bg-blue-600 text-white"
+    : "bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100";
+  const bubbleAlignment = isMe
+    ? "items-end"
+    : "items-start";
 
   const MessageStatusIcon = useCallback(() => {
-    if (isClient) return null;
+    if (!isMe) return null;
 
     const size = "w-4 h-4";
 
@@ -175,7 +219,7 @@ function MessageBubble({ message }: { message: Message }) {
       );
     }
     return <Clock className={size} />;
-  }, [isClient, message.delivered_at, message.read_at]);
+  }, [isMe, message.delivered_at, message.read_at]);
 
   return (
     <div
@@ -193,7 +237,11 @@ function MessageBubble({ message }: { message: Message }) {
           <span className="text-xs">
             {new Date(
               message.created_at
-            ).toLocaleTimeString()}
+            ).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })}
           </span>
           <MessageStatusIcon />
         </div>
