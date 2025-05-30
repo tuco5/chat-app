@@ -27,9 +27,11 @@ export default function ChatForm({
   clientId: string;
   whoseId: "Client" | "User";
 }) {
+  /* MUTATIONS */
   const { mutate: mutateDeliveredMessage } = useMutation({
     mutationFn: updateDeliveredMessage,
   });
+
   const { mutate: mutateNewMessage } = useMutation({
     mutationFn: newMessage,
     onSuccess: (message) => {
@@ -38,6 +40,7 @@ export default function ChatForm({
     },
   });
 
+  /* FORM */
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {

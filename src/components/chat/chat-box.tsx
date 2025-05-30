@@ -27,13 +27,12 @@ export default function ChatBox({
   whoseId: "Client" | "User";
   clientId: string;
 }) {
+  /* STATE */
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [messages, setMessages] =
     useState<Message[]>(serverData);
 
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  // Subscribe to new messages and updates
+  /* SUBSCRIBE TO REAL TIME EVENTS */
   useEffect(() => {
     const channel = supabase
       .channel("chat")
@@ -76,6 +75,9 @@ export default function ChatBox({
       supabase.removeChannel(channel);
     };
   }, [messages, setMessages, whoseId, clientId]);
+
+  /* SCROLL TO BOTTOM */
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     scrollToBottom();
