@@ -16,7 +16,7 @@ export default async function UserPage({
   const data = await getMessagesByClientId(id);
 
   return (
-    <main className="p-4 h-screen flex flex-col items-center">
+    <main className="p-2 flex flex-col items-center h-screen">
       <header className="flex items-center justify-between w-full max-w-6xl mb-6">
         <SelliaLogo />
         <nav className="flex gap-2 items-center">
@@ -24,7 +24,7 @@ export default async function UserPage({
           <GithubLogo />
         </nav>
       </header>
-      <div className="flex flex-col items-center gap-4 w-full h-full max-w-4xl pb-14">
+      <div className="flex flex-col items-center gap-4 w-full h-full max-w-4xl">
         <h1 className="text-3xl font-bold">
           👋 Hello {client.name}
         </h1>
