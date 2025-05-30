@@ -35,20 +35,6 @@ export default function ChatBox({
 
   // Subscribe to new messages and updates
   useEffect(() => {
-    const markMessageAsDelivered = async (
-      payload: Message
-    ) => {
-      const delivered_at = new Date().toISOString();
-      const { error } = await supabase
-        .from("messages")
-        .update({
-          delivered_at,
-        })
-        .eq("id", payload.id);
-
-      if (error) console.error(error);
-    };
-
     const channel = supabase
       .channel("chat")
       .on(
@@ -64,7 +50,6 @@ export default function ChatBox({
             ...messages,
             payload.new as Message,
           ]);
-          markMessageAsDelivered(payload.new as Message);
         }
       )
       .on(
@@ -95,8 +80,6 @@ export default function ChatBox({
   useEffect(() => {
     scrollToBottom();
   }, [messages.length]);
-
-  useEffect(() => {}, [messages]);
 
   const scrollToBottom = (
     behavior: ScrollBehavior = "instant"

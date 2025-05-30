@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -11,15 +10,15 @@ import {
   FormField,
   FormItem,
 } from "@/components/ui/form";
-import { supabase } from "@/lib/supabase";
-
-const formSchema = z.object({
-  text: z.string().min(1, "Message cannot be empty"),
-  sender: z.enum(["User", "Client", "UserSystem"]),
-  client_id: z.string().min(1, "Client ID is required"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import {
+  formSchema,
+  type FormValues,
+} from "@/schemas/validation-schema";
+import { useMutation } from "@tanstack/react-query";
+import {
+  newMessage,
+  updateDeliveredMessage,
+} from "@/api/messages";
 
 export default function ChatForm({
   clientId,
@@ -28,6 +27,17 @@ export default function ChatForm({
   clientId: string;
   whoseId: "Client" | "User";
 }) {
+  const { mutate: mutateDeliveredMessage } = useMutation({
+    mutationFn: updateDeliveredMessage,
+  });
+  const { mutate: mutateNewMessage } = useMutation({
+    mutationFn: newMessage,
+    onSuccess: (message) => {
+      if (!message) return;
+      mutateDeliveredMessage(message);
+    },
+  });
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -38,12 +48,7 @@ export default function ChatForm({
   });
 
   async function onSubmit(values: FormValues) {
-    console.log("Form submitted:", values);
-    const { error } = await supabase
-      .from("messages")
-      .insert([values]);
-
-    if (error) console.error(error);
+    mutateNewMessage(values);
 
     form.reset({
       text: "",

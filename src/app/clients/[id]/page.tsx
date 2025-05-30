@@ -1,10 +1,10 @@
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { getClientById } from "@/api/clients";
+import { getMessagesByClientId } from "@/api/messages";
 import ChatBox from "@/components/chat/chat-box";
 import ChatForm from "@/components/chat/chat-form";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/lib/supabase";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 
 export default async function ClientPage({
   params,
@@ -13,12 +13,7 @@ export default async function ClientPage({
 }) {
   const { id } = await params;
   const client = await getClientById(id);
-
-  const { data } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("client_id", id)
-    .order("created_at", { ascending: true });
+  const data = await getMessagesByClientId(id);
 
   return (
     <main className="p-4 h-[94.5vh] flex flex-col items-center ">
