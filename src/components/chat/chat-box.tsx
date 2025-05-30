@@ -1,5 +1,5 @@
 "use client";
-
+import { useIntersectionObserver } from "usehooks-ts";
 import {
   useCallback,
   useEffect,
@@ -12,11 +12,15 @@ import {
   CheckCheck,
   Clock,
 } from "lucide-react";
-import { Message } from "@/api/messages";
+import {
+  Message,
+  updateReadedMessage,
+} from "@/api/messages";
 import { cn } from "@/utils/cn";
 import { formatDate } from "@/utils/dates";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { useMutation } from "@tanstack/react-query";
 
 export default function ChatBox({
   serverData,
@@ -27,28 +31,13 @@ export default function ChatBox({
   whoseId: "Client" | "User";
   clientId: string;
 }) {
+  /* STATE */
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [messages, setMessages] =
     useState<Message[]>(serverData);
 
-  const bottomRef = useRef<HTMLDivElement | null>(null);
-
-  // Subscribe to new messages and updates
+  /* SUBSCRIBE TO REAL TIME EVENTS */
   useEffect(() => {
-    const markMessageAsDelivered = async (
-      payload: Message
-    ) => {
-      const delivered_at = new Date().toISOString();
-      const { error } = await supabase
-        .from("messages")
-        .update({
-          delivered_at,
-        })
-        .eq("id", payload.id);
-
-      if (error) console.error(error);
-    };
-
     const channel = supabase
       .channel("chat")
       .on(
@@ -64,7 +53,6 @@ export default function ChatBox({
             ...messages,
             payload.new as Message,
           ]);
-          markMessageAsDelivered(payload.new as Message);
         }
       )
       .on(
@@ -90,13 +78,14 @@ export default function ChatBox({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [messages, setMessages, whoseId, clientId]);
+  }, [setMessages, whoseId, clientId]);
+
+  /* SCROLL TO BOTTOM */
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages.length]);
-
-  useEffect(() => {}, [messages]);
 
   const scrollToBottom = (
     behavior: ScrollBehavior = "instant"
@@ -194,8 +183,30 @@ function MessageBubble({
   message: Message;
   whoseId: "Client" | "User";
 }) {
+  /* MUTATION */
+  const { mutate } = useMutation({
+    mutationFn: updateReadedMessage,
+    onError: (error) => {
+      console.error(
+        "Error updating readed message:",
+        error
+      );
+    },
+  });
+
+  /* INTERSECTION OBSERVER */
+  const { isIntersecting, ref } = useIntersectionObserver();
+
+  useEffect(() => {
+    if (!message.read_at && isIntersecting) {
+      mutate(message);
+    }
+  }, [isIntersecting, message, mutate]);
+
+  /* VARIABLES */
   const isMe = message.sender.includes(whoseId);
 
+  /* STYLES */
   const bubbleSide = isMe ? "justify-end" : "justify-start";
   const bubbleColor = isMe
     ? "bg-blue-600 text-white"
@@ -204,6 +215,7 @@ function MessageBubble({
     ? "items-end"
     : "items-start";
 
+  /* INNER COMPONENT */
   const MessageStatusIcon = useCallback(() => {
     if (!isMe) return null;
 
@@ -226,6 +238,7 @@ function MessageBubble({
 
   return (
     <div
+      ref={!isMe ? ref : null}
       className={cn("flex items-start gap-2", bubbleSide)}
     >
       <div

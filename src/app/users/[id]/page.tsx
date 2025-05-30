@@ -1,10 +1,10 @@
-import { supabase } from "@/lib/supabase";
 import { getClientById } from "@/api/clients";
 import ChatBox from "@/components/chat/chat-box";
 import ChatForm from "@/components/chat/chat-form";
 import GithubLogo from "@/components/layout/github-logo";
 import { SelliaLogo } from "@/components/layout/sellia-logo";
 import ThemeToggle from "@/components/layout/theme-toggle";
+import { getMessagesByClientId } from "@/api/messages";
 
 export default async function UserPage({
   params,
@@ -13,12 +13,7 @@ export default async function UserPage({
 }) {
   const { id } = await params;
   const client = await getClientById(id);
-
-  const { data } = await supabase
-    .from("messages")
-    .select("*")
-    .eq("client_id", id)
-    .order("created_at", { ascending: true });
+  const data = await getMessagesByClientId(id);
 
   return (
     <main className="p-4 h-screen flex flex-col items-center">
