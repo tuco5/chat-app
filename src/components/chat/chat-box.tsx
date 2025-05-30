@@ -38,8 +38,6 @@ export default function ChatBox({
     const markMessageAsDelivered = async (
       payload: Message
     ) => {
-      if (payload.sender === whoseId) return;
-
       const delivered_at = new Date().toISOString();
       const { error } = await supabase
         .from("messages")
