@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💬 Seelia Messaging App – Take-Home Challenge
 
-## Getting Started
+This project is a redesign of Seelia’s omnichannel messaging app, built with accessibility, visual ergonomics, and responsive design in mind. The app allows small and medium-sized businesses to manage client conversations through an intuitive and dynamic interface.
 
-First, run the development server:
+## 🔧 Tech Stack
+
+- **Framework**: Next.js 15 + React 19
+- **Styling**: TailwindCSS
+- **State Management**: React Query
+- **Data Fetching**: REST API + Supabase
+- **Forms**: React Hook Form + Zod
+- **Testing**: Jest + React Testing Library
+- **Accessibility**: Light/Dark Mode, High Contrast, Keyboard Navigation
+- **Bonus**: Real-time simulation, loading skeletons, Supabase event-based updates
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/seelia-chat-app.git
+cd seelia-chat-app
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be available at `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🧪 Running Tests
 
-## Learn More
+```bash
+npm test
+```
 
-To learn more about Next.js, take a look at the following resources:
+Or in watch mode:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run test:watch
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🔍 Features Implemented
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ✅ Responsive layout (mobile & desktop)
+- ✅ Light and dark themes with toggle
+- ✅ Client list display
+- ✅ Full message thread view per client
+- ✅ Supabase-powered real-time updates
+- ✅ Skeletons and loading states
+- ✅ Error handling with fallback UI
+- ✅ Unit tests for key components
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🛠 Available Scripts
+
+| Command         | Description               |
+| --------------- | ------------------------- |
+| `npm run dev`   | Start development server  |
+| `npm run build` | Create production build   |
+| `npm run start` | Start production server   |
+| `npm run test`  | Run unit tests            |
+| `npm run lint`  | Lint codebase with ESLint |
+
+---
+
+## 📷 Screenshots
+
+- Full desktop layout
+  ![Desktop Layout](<Screenshot from 2025-05-30 12-47-16.png>)
+
+- Mobile version
+  ![Mobile Version](<Screenshot from 2025-05-30 12-49-09.png>)
+
+- Light/dark mode
+  ![Ligth/Dark Mode](<Screenshot from 2025-05-30 12-54-03.png>)
+
+- Real-time update behavior
+  ![alt text](<Screenshot from 2025-05-30 12-59-44.png>)
+
+---
+
+## 📂 Architecture Overview
+
+- `pages/`: Routing via Next.js
+- `components/`: Reusable UI and layout components
+- `hooks/`: Custom hooks for intersection observers, fetch logic
+- `lib/`: Supabase client, API helpers
+- `tests/`: Unit tests using Testing Library
+
+---
+
+## ✅ Bonus Features
+
+- [x] Real-time update simulation using Supabase
+- [x] Accessible UI with high contrast and keyboard nav
+- [x] Loading skeletons
+- [x] Robust error handling
+- [x] Type-safe forms with Zod
+
+---
+
+## 🌐 Live Demo
+
+[tuco5.sellia-chat.app](https://chat-app-zeta-nine-49.vercel.app)
+
+---
+
+## 📚 Useful Resources
+
+- [Next.js Docs](https://nextjs.org/docs)
+- [TailwindCSS Docs](https://tailwindcss.com/docs)
+- [React Hook Form](https://react-hook-form.com/)
+- [Supabase](https://supabase.com/docs)
+
+---
+
+## 🎨 Styleguide
+
+This project uses a component-driven approach for consistent styling and reusability, leveraging:
+
+### ✳️ Libraries Used
+
+- **[shadcn/ui](https://ui.shadcn.com/)**:
+  UI components built with TailwindCSS and Radix Primitives. It provides accessible, theme-aware components used throughout the app (buttons, cards, inputs, etc.).
+
+- **[Radix UI](https://www.radix-ui.com/primitives/docs/overview/introduction)**:
+  Unstyled and accessible low-level UI primitives used for dialogs, tooltips, dropdowns, etc. Ensures keyboard accessibility and focus management.
+
+### 🎨 Design Tokens
+
+- **Typography**: System font stack for performance and clarity.
+- **Colors**: Tailwind’s semantic `neutral`, `primary`, and `accent` scales, configured for both light and dark mode.
+- **Spacing**: Tailwind utility-based spacing (e.g. `p-4`, `gap-6`, `mt-8`).
+- **Rounding**: Consistent `rounded-2xl` on cards and modals for a soft, modern aesthetic.
+- **Shadow**: Subtle elevation with `shadow-md` and `shadow-lg` on primary UI elements.
+
+### 🌙 Dark Mode
+
+- Handled with `next-themes` and Tailwind’s `dark:` variant.
+- Toggleable by users and respects system preference.
+
+### 📏 Responsiveness
+
+- Fully responsive via Tailwind’s `sm:`, `md:`, `lg:` and `xl:` breakpoints.
+- Mobile-first layout design.
