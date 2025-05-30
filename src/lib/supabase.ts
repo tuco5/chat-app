@@ -1,5 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
-import { Database } from "@/schema.js";
+import { Database } from "@/schemas/db-schema";
 import { env } from "@/env.mjs";
 
 export const supabase = createClient<Database>(
