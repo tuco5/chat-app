@@ -20,28 +20,20 @@ export default function Home() {
           <Link href="/clients">Start as Agent 🚀</Link>
         </Button>
 
-        <div className="flex items-center gap-2 w-full text-muted-foreground">
+        <div className="flex items-center gap-2 w-full">
           <hr className="w-1/2" />
           <p className="text-nowrap">or Login as:</p>
           <hr className="w-1/2" />
         </div>
 
         <div className="flex items-center gap-4">
-          <Button
-            asChild
-            variant="outline"
-            className="text-lg py-6 px-10 bg-gray-300/20"
-          >
+          <Button asChild className="text-lg py-6 px-10 ">
             <Link href="/users/629a8125b2d313190810212f">
               Pedro 😎
             </Link>
           </Button>
-          <span className="text-muted-foreground">or</span>
-          <Button
-            asChild
-            variant="secondary"
-            className="text-lg py-6 px-10 bg-gray-300/20"
-          >
+          <span>|</span>
+          <Button asChild className="text-lg py-6 px-10">
             <Link href="/users/629e39e8b2d31319081e0650">
               Diego 🙂
             </Link>
