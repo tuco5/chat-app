@@ -33,7 +33,11 @@ export default async function UserPage({
         <h1 className="text-3xl font-bold">
           👋 Hello {client.name}
         </h1>
-        <ChatBox serverData={data ?? []} whoseId="Client" />
+        <ChatBox
+          serverData={data ?? []}
+          whoseId="Client"
+          clientId={id}
+        />
         <ChatForm clientId={id} whoseId="Client" />
       </div>
     </main>
