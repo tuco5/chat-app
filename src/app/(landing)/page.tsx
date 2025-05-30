@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 export default function Home() {
   return (
     <div className="flex flex-col items-center">
-      <section className="text-center max-w-2xl flex flex-col items-center mt-20 gap-12">
+      <section className="text-center max-w-2xl flex flex-col items-center mt-20 gap-12 p-4">
         <h1 className="md:text-5xl text-4xl font-bold mb-4">
           Connect Instantly. <br />
           Chat Seamlessly.
@@ -26,7 +26,7 @@ export default function Home() {
           <hr className="w-1/2" />
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 pb-10">
           <Button asChild className="text-lg py-6 px-10 ">
             <Link href="/users/629a8125b2d313190810212f">
               Pedro 😎

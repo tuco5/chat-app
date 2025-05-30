@@ -30,20 +30,22 @@ export function ClientCard({ client }: { client: Client }) {
   });
 
   useEffect(() => {
-    const channel = supabase.channel("notifications").on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "messages",
-        filter: `client_id=eq.${client._id}`,
-      },
-      () => {
-        queryClient.invalidateQueries({
-          queryKey: ["unread_messages_count", client._id],
-        });
-      }
-    );
+    const channel = supabase
+      .channel(`notifications-${client._id}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `client_id=eq.${client._id}`,
+        },
+        () => {
+          queryClient.invalidateQueries({
+            queryKey: ["unread_messages_count", client._id],
+          });
+        }
+      );
 
     channel.subscribe();
     return () => {

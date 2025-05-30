@@ -16,7 +16,7 @@ export default async function ClientPage({
   const data = await getMessagesByClientId(id);
 
   return (
-    <main className="p-4 h-[94.5vh] flex flex-col items-center ">
+    <main className="p-4 h-[90vh] flex flex-col items-center ">
       <div className="flex flex-col items-center gap-4 w-full h-full max-w-4xl pb-14">
         <div className="flex items-center gap-4 w-full">
           <Button
