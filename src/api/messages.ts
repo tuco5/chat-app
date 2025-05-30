@@ -103,3 +103,30 @@ export async function getMessagesByClientId(
   }
   return data;
 }
+
+/**
+ * Fetches the number of unread messages for a given client.
+ *
+ * @param clientId - The ID of the client to fetch unread messages for.
+ * @returns The number of unread messages if successful, 0 otherwise.
+ * @throws {Error} If the unread messages count could not be fetched
+ */
+export async function getUnreadMessagesCount(
+  clientId: string
+): Promise<number> {
+  console.log("Unread messages count:", clientId);
+  const { count, error } = await supabase
+    .from("messages")
+    .select("*", { count: "exact", head: true })
+    .eq("client_id", clientId)
+    .eq("sender", "Client")
+    .is("read_at", null);
+
+  if (error) {
+    throw new Error(
+      "Failed to fetch unread messages count",
+      error
+    );
+  }
+  return count ?? 0;
+}
