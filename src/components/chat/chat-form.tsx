@@ -30,6 +30,12 @@ export default function ChatForm({
   /* MUTATIONS */
   const { mutate: mutateDeliveredMessage } = useMutation({
     mutationFn: updateDeliveredMessage,
+    onError: (error) => {
+      console.error(
+        "Error updating delivered message:",
+        error
+      );
+    },
   });
 
   const { mutate: mutateNewMessage } = useMutation({
@@ -37,6 +43,9 @@ export default function ChatForm({
     onSuccess: (message) => {
       if (!message) return;
       mutateDeliveredMessage(message);
+    },
+    onError: (error) => {
+      console.error("Error sending message:", error);
     },
   });
 

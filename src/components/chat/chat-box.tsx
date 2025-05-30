@@ -1,5 +1,5 @@
 "use client";
-
+import { useIntersectionObserver } from "usehooks-ts";
 import {
   useCallback,
   useEffect,
@@ -12,11 +12,15 @@ import {
   CheckCheck,
   Clock,
 } from "lucide-react";
-import { Message } from "@/api/messages";
+import {
+  Message,
+  updateReadedMessage,
+} from "@/api/messages";
 import { cn } from "@/utils/cn";
 import { formatDate } from "@/utils/dates";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
+import { useMutation } from "@tanstack/react-query";
 
 export default function ChatBox({
   serverData,
@@ -74,7 +78,7 @@ export default function ChatBox({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [messages, setMessages, whoseId, clientId]);
+  }, [setMessages, whoseId, clientId]);
 
   /* SCROLL TO BOTTOM */
   const bottomRef = useRef<HTMLDivElement | null>(null);
@@ -179,8 +183,30 @@ function MessageBubble({
   message: Message;
   whoseId: "Client" | "User";
 }) {
+  /* MUTATION */
+  const { mutate } = useMutation({
+    mutationFn: updateReadedMessage,
+    onError: (error) => {
+      console.error(
+        "Error updating readed message:",
+        error
+      );
+    },
+  });
+
+  /* INTERSECTION OBSERVER */
+  const { isIntersecting, ref } = useIntersectionObserver();
+
+  useEffect(() => {
+    if (!message.read_at && isIntersecting) {
+      mutate(message);
+    }
+  }, [isIntersecting, message, mutate]);
+
+  /* VARIABLES */
   const isMe = message.sender.includes(whoseId);
 
+  /* STYLES */
   const bubbleSide = isMe ? "justify-end" : "justify-start";
   const bubbleColor = isMe
     ? "bg-blue-600 text-white"
@@ -189,6 +215,7 @@ function MessageBubble({
     ? "items-end"
     : "items-start";
 
+  /* INNER COMPONENT */
   const MessageStatusIcon = useCallback(() => {
     if (!isMe) return null;
 
@@ -211,6 +238,7 @@ function MessageBubble({
 
   return (
     <div
+      ref={!isMe ? ref : null}
       className={cn("flex items-start gap-2", bubbleSide)}
     >
       <div

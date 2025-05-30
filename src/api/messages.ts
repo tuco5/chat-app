@@ -53,6 +53,36 @@ export async function updateDeliveredMessage(
 }
 
 /**
+ * Updates a message in the messages table to mark it as read.
+ *
+ * @param message - The message to update.
+ * @returns The updated message if successful, null otherwise.
+ * @throws {Error} If the message could not be updated
+ */
+export async function updateReadedMessage(
+  message: Message
+): Promise<Message | null> {
+  const read_at = new Date().toISOString();
+  const delivered_at = message.delivered_at
+    ? message.delivered_at
+    : read_at;
+
+  const { error, data } = await supabase
+    .from("messages")
+    .update({
+      read_at,
+      delivered_at,
+    })
+    .eq("id", message.id)
+    .select();
+
+  if (error) {
+    throw new Error("Failed to send message", error);
+  }
+  return data[0];
+}
+
+/**
  * Fetches all messages for a given client, sorted by creation date in ascending order.
  *
  * @param clientId - The ID of the client to fetch messages for.
