@@ -21,7 +21,7 @@ export default async function UserPage({
     .order("created_at", { ascending: true });
 
   return (
-    <main className="p-4 h-screen flex flex-col items-center bg-linear-to-br from-white to-blue-100 dark:from-gray-950 dark:to-gray-900">
+    <main className="p-4 h-screen flex flex-col items-center">
       <header className="flex items-center justify-between w-full max-w-6xl mb-6">
         <SelliaLogo />
         <nav className="flex gap-2 items-center">
