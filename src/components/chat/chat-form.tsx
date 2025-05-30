@@ -32,7 +32,7 @@ export default function ChatForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       text: "",
-      sender: "User",
+      sender: whoseId,
       client_id: clientId,
     },
   });

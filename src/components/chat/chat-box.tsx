@@ -7,7 +7,7 @@ import {
   useState,
 } from "react";
 import {
-  ArrowBigDownDash,
+  ArrowDownToLine,
   Check,
   CheckCheck,
   Clock,
@@ -20,10 +20,10 @@ import { supabase } from "@/lib/supabase";
 
 export default function ChatBox({
   serverData,
-  whoseId = "Client",
+  whoseId,
 }: {
   serverData: Message[];
-  whoseId?: "Client" | "User";
+  whoseId: "Client" | "User";
 }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [messages, setMessages] =
@@ -32,6 +32,22 @@ export default function ChatBox({
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const markMessageAsDelivered = async (
+      payload: Message
+    ) => {
+      if (payload.sender === whoseId) return;
+
+      const delivered_at = new Date().toISOString();
+      const { error } = await supabase
+        .from("messages")
+        .update({
+          delivered_at,
+        })
+        .eq("id", payload.id);
+
+      if (error) console.error(error);
+    };
+
     const channel = supabase
       .channel("chat")
       .on(
@@ -42,11 +58,28 @@ export default function ChatBox({
           table: "messages",
         },
         (payload) => {
-          console.log("New message received:", payload);
           setMessages((messages) => [
             ...messages,
             payload.new as Message,
           ]);
+          markMessageAsDelivered(payload.new as Message);
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "messages",
+        },
+        (payload) => {
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === payload.new.id
+                ? (payload.new as Message)
+                : msg
+            )
+          );
         }
       )
       .subscribe();
@@ -54,11 +87,13 @@ export default function ChatBox({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [messages, setMessages]);
+  }, [messages, setMessages, whoseId]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages.length]);
+
+  useEffect(() => {}, [messages]);
 
   const scrollToBottom = (
     behavior: ScrollBehavior = "instant"
@@ -114,7 +149,7 @@ export default function ChatBox({
           onClick={() => scrollToBottom("smooth")}
           className="absolute bottom-4 left-1/2 transform -translate-x-1/2 p-2 rounded-full bg-blue-600/50 text-white shadow-md hover:bg-blue-600 transition"
         >
-          <ArrowBigDownDash />
+          <ArrowDownToLine />
         </Button>
       )}
     </div>
