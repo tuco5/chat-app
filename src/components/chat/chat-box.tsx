@@ -21,9 +21,11 @@ import { supabase } from "@/lib/supabase";
 export default function ChatBox({
   serverData,
   whoseId,
+  clientId,
 }: {
   serverData: Message[];
   whoseId: "Client" | "User";
+  clientId: string;
 }) {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [messages, setMessages] =
@@ -31,12 +33,11 @@ export default function ChatBox({
 
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
+  // Subscribe to new messages and updates
   useEffect(() => {
     const markMessageAsDelivered = async (
       payload: Message
     ) => {
-      if (payload.sender === whoseId) return;
-
       const delivered_at = new Date().toISOString();
       const { error } = await supabase
         .from("messages")
@@ -56,6 +57,7 @@ export default function ChatBox({
           event: "INSERT",
           schema: "public",
           table: "messages",
+          filter: `client_id=eq.${clientId}`,
         },
         (payload) => {
           setMessages((messages) => [
@@ -71,6 +73,7 @@ export default function ChatBox({
           event: "UPDATE",
           schema: "public",
           table: "messages",
+          filter: `client_id=eq.${clientId}`,
         },
         (payload) => {
           setMessages((prev) =>
@@ -87,7 +90,7 @@ export default function ChatBox({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [messages, setMessages, whoseId]);
+  }, [messages, setMessages, whoseId, clientId]);
 
   useEffect(() => {
     scrollToBottom();

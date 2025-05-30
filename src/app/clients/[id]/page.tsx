@@ -37,7 +37,11 @@ export default async function ClientPage({
             {client.name}
           </h1>
         </div>
-        <ChatBox serverData={data ?? []} whoseId="User" />
+        <ChatBox
+          serverData={data ?? []}
+          whoseId="User"
+          clientId={id}
+        />
         <ChatForm clientId={id} whoseId="User" />
       </div>
     </main>
