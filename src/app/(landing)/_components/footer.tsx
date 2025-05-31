@@ -1,8 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="flex justify-center items-center h-25 border-t border-muted bg-sidebar/60 mt-auto">
-      <div className="flex items-center justify-between p-2 w-full max-w-6xl">
-        &copy; 2025 Sellia. All rights reserved.
+    <footer className="flex justify-between items-center h-25 border-t border-muted bg-sidebar/60 mt-auto p-2">
+      <div className="flex flex-col md:flex-row md:items-center items-start gap-2">
+        <p>&copy; 2025 Sellia.</p>
+        <p>All rights reserved.</p>
       </div>
 
       <a
