@@ -17,7 +17,6 @@ export function CodeChallengeLogo() {
           width={24}
           className="h-6 w-6 lg:h-10 lg:w-10 flex-shrink-0"
           loading="eager"
-          priority
         />
         <p className=" italic font-bold text-2xl lg:text-3xl">
           sellia

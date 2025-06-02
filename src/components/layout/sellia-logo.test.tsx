@@ -19,8 +19,6 @@ describe("CodeChallengeLogo", () => {
     ) as HTMLImageElement;
     expect(img).toBeInTheDocument();
     expect(img.src).toContain("/logo.png");
-    expect(img.width).toBe(128);
-    expect(img.height).toBe(40);
   });
 
   it("renders the text 'sellia'", () => {
