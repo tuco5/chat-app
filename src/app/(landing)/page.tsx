@@ -32,7 +32,7 @@ export default function Home() {
               Pedro 😎
             </Link>
           </Button>
-          <span>|</span>
+          <span className="text-muted-foreground">|</span>
           <Button asChild className="text-lg py-6 px-10">
             <Link href="/users/629e39e8b2d31319081e0650">
               Diego 🙂
